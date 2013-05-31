@@ -11,7 +11,10 @@
    {included_applications, []},
    {applications, [kernel, stdlib]},
    {env,
-                [{address, {0, 0, 0, 0}}]},
+                [{address, {0, 0, 0, 0}},
+                 {sndbuff, 100000},
+                 {rcvbuff, 100000}
+                ]},
    {mod, {radius_app, []}},
    {start_phases, []}]}.
 

@@ -7,6 +7,7 @@ Changes:
 
     - Rename repo to radius
     - Replace original makefiles with rebar support
+    - Allow passing extra env options for udp socket (i.e. sndbuff, rcvbuff)
     - More incoming
 
 BSD License.
