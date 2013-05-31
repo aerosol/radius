@@ -4,18 +4,18 @@
 %%% @end
 %%%
 %%% Copyright (c) 2011, Motivity Telecom
-%%% 
+%%%
 %%% All rights reserved.
-%%% 
+%%%
 %%% Redistribution and use in source and binary forms, with or without
 %%% modification, are permitted provided that the following conditions
 %%% are met:
-%%% 
+%%%
 %%%    - Redistributions of source code must retain the above copyright
 %%%      notice, this list of conditions and the following disclaimer.
 %%%    - Redistributions in binary form must reproduce the above copyright
 %%%      notice, this list of conditions and the following disclaimer in
-%%%      the documentation and/or other materials provided with the 
+%%%      the documentation and/or other materials provided with the
 %%%      distribution.
 %%%    - Neither the name of Motivity Telecom nor the names of its
 %%%      contributors may be used to endorse or promote products derived
@@ -29,7 +29,7 @@
 %%% SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
 %%% LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 %%% DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-%%% THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+%%% THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 %%% (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 %%% OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %%%
@@ -44,8 +44,8 @@
 
 -compile(export_all).
 
--include("ct.hrl").
--include("../../include/radius.hrl").
+-include_lib("common_test/include/ct.hrl").
+-include_lib("radius/include/radius.hrl").
 
 -define(TIMEOUT, 2000).
 
@@ -114,13 +114,13 @@ end_per_testcase(_TestCase, Config) ->
 	Socket = ?config(socket, Config),
 	ok = gen_udp:close(Socket).
 
-%% @spec () -> Sequences 
+%% @spec () -> Sequences
 %% 	Sequences = [{SeqName, Testcases}]
 %% 	SeqName = atom()
 %% 	Testcases = [atom()]
 %% @doc Group test cases into a test sequence.
 %%
-sequences() -> 
+sequences() ->
 	[].
 
 %% @spec () -> TestCases
@@ -128,7 +128,7 @@ sequences() ->
 %% 	Case = atom()
 %% @doc Returns a list of all test cases in this test suite.
 %%
-all() -> 
+all() ->
 	[client_unknown, client, user, user_unknown, wrong_password,
 			request_simple, request_chap].
 
@@ -316,7 +316,7 @@ request_chap(Config) ->
 	ResponseAuthenticator = binary_to_list(Hash),
 	User2Attributes = ?config(user2_attributes, Config),
 	User2Attributes = radius_attributes:codec(BinaryResponseAttributes).
-	
+
 %%---------------------------------------------------------------------
 %%  Internal functions
 %%---------------------------------------------------------------------

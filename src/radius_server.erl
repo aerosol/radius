@@ -35,7 +35,7 @@
 %%%
 %%%---------------------------------------------------------------------
 %%% @doc A {@link //stdlib/gen_server. gen_server} callback module
-%%% 	for the {@link //radius. radius} application..
+%%%	for the {@link //radius. radius} application..
 %%%
 -module(radius_server).
 -copyright('Copyright (c) 2011 Motivity Telecom').
@@ -53,13 +53,13 @@
 -include("radius.hrl").
 
 %% @type state() = #state{
-%% 	sup = pid(),
-%% 	socket = socket(),
-%% 	address = ip_address(),
-%% 	port = integer(),
-%% 	module = atom(),
-%% 	fsm_sup = pid(),
-%% 	handlers = gb_tree()}.
+%%	sup = pid(),
+%%	socket = socket(),
+%%	address = ip_address(),
+%%	port = integer(),
+%%	module = atom(),
+%%	fsm_sup = pid(),
+%%	handlers = gb_tree()}.
 -record(state, {sup, socket, address, port, module, fsm_sup,
 		handlers = gb_trees:empty()}).
 
@@ -72,11 +72,11 @@
 %%----------------------------------------------------------------------
 
 %% @spec (Args) -> Result
-%% 	Args = list()
-%% 	Result = {ok,State} | {ok,State,Timeout} | {stop,Reason} | ignore
-%% 	State = state()
-%% 	Timeout = integer() | infinity
-%% 	Reason = term()
+%%	Args = list()
+%%	Result = {ok,State} | {ok,State,Timeout} | {stop,Reason} | ignore
+%%	State = state()
+%%	Timeout = integer() | infinity
+%%	Reason = term()
 %% @doc Initialize the {@module} server.
 %% @see //stdlib/gen_server:init/1
 %% @private
@@ -102,7 +102,7 @@ init([Sup, Module, Port, Address] = _Args) ->
 			_ ->
 				throw(badarg)
 		end,
-		ExtraSockOpts = application:get_env(radius, extra_socket_opts, []),
+		{ok, ExtraSockOpts} = get_env(extra_sock_opts, []),
 		{PortUsed, Socket} = case gen_udp:open(Port, [{active, once},
 				{ip, IP}, Type, binary] ++ ExtraSockOpts) of
 			{ok, S} when Port =:= 0 ->
@@ -130,23 +130,23 @@ init([Sup, Module, Port, Address] = _Args) ->
 	end.
 
 %% @spec (Request::term(), From, State::state()) -> Result
-%% 	From = {pid(), Tag}
-%% 	Tag = any()
-%% 	Result = {reply, Reply, NewState}
-%% 	         | {reply, Reply, NewState, Timeout}
-%% 	         | {reply, Reply, NewState, hibernate}
-%% 	         | {noreply, NewState}
-%% 	         | {noreply, NewState, Timeout}
-%% 	         | {noreply, NewState, hibernate}
-%% 	         | {stop, Reason, Reply, NewState}
-%% 	         | {stop, Reason, NewState}
-%% 	Reply = term()
-%% 	NewState = state()
-%% 	Timeout = integer() | infinity
-%% 	Reason = term()
+%%	From = {pid(), Tag}
+%%	Tag = any()
+%%	Result = {reply, Reply, NewState}
+%%		 | {reply, Reply, NewState, Timeout}
+%%		 | {reply, Reply, NewState, hibernate}
+%%		 | {noreply, NewState}
+%%		 | {noreply, NewState, Timeout}
+%%		 | {noreply, NewState, hibernate}
+%%		 | {stop, Reason, Reply, NewState}
+%%		 | {stop, Reason, NewState}
+%%	Reply = term()
+%%	NewState = state()
+%%	Timeout = integer() | infinity
+%%	Reason = term()
 %% @doc Handle a request sent using {@link //stdlib/gen_server:call/2.
-%% 	gen_server:call/2,3} or {@link //stdlib/gen_server:multi_call/2.
-%% 	gen_server:multi_call/2,3,4}.
+%%	gen_server:call/2,3} or {@link //stdlib/gen_server:multi_call/2.
+%%	gen_server:multi_call/2,3,4}.
 %% @see //stdlib/gen_server:handle_call/3
 %% @private
 %%
@@ -159,15 +159,15 @@ handle_call(_Request, {Pid, _Tag}, State) ->
 	{noreply, State}.
 
 %% @spec (Request::term(), State::state()) -> Result
-%% 	Result = {noreply, NewState} | {noreply, NewState, Timeout}
-%% 	         | {noreply, NewState, hibernate}
-%% 	         | {stop, Reason, NewState}
-%% 	NewState = state()
-%% 	Timeout = integer() | infinity
-%% 	Reason = term()
+%%	Result = {noreply, NewState} | {noreply, NewState, Timeout}
+%%		 | {noreply, NewState, hibernate}
+%%		 | {stop, Reason, NewState}
+%%	NewState = state()
+%%	Timeout = integer() | infinity
+%%	Reason = term()
 %% @doc Handle a request sent using {@link //stdlib/gen_server:cast/2.
-%% 	gen_server:cast/2} or {@link //stdlib/gen_server:abcast/2.
-%% 	gen_server:abcast/2,3}.
+%%	gen_server:cast/2} or {@link //stdlib/gen_server:abcast/2.
+%%	gen_server:abcast/2,3}.
 %% @see //stdlib/gen_server:handle_cast/2
 %% @private
 %%
@@ -175,13 +175,13 @@ handle_cast(_Request, State) ->
 	{noreply, State}.
 
 %% @spec (Info, State::state()) -> Result
-%% 	Info = timeout | term()
-%% 	Result = {noreply, NewState} | {noreply, NewState, Timeout}
-%% 	         | {noreply, NewState, hibernate}
-%% 	         | {stop, Reason, NewState}
-%% 	NewState = state()
-%% 	Timeout = integer() | infinity
-%% 	Reason = normal | term()
+%%	Info = timeout | term()
+%%	Result = {noreply, NewState} | {noreply, NewState, Timeout}
+%%		 | {noreply, NewState, hibernate}
+%%		 | {stop, Reason, NewState}
+%%	NewState = state()
+%%	Timeout = integer() | infinity
+%%	Reason = normal | term()
 %% @doc Handle a received message.
 %% @see //stdlib/gen_server:handle_info/2
 %% @private
@@ -268,7 +268,7 @@ handle_info({'EXIT', Fsm, _Reason},
 	end.
 
 %% @spec (Reason, State::state()) -> any()
-%% 	Reason = normal | shutdown | term()
+%%	Reason = normal | shutdown | term()
 %% @doc Cleanup and exit.
 %% @see //stdlib/gen_server:terminate/3
 %% @private
@@ -277,10 +277,10 @@ terminate(Reason, #state{module = Module} = _State) ->
 	Module:terminate(Reason).
 
 %% @spec (OldVsn, State::state(), Extra::term()) -> Result
-%% 	OldVsn = Vsn | {down, Vsn}
-%% 	Vsn = term()
-%% 	Result = {ok, NewState}
-%% 	NewState = state()
+%%	OldVsn = Vsn | {down, Vsn}
+%%	Vsn = term()
+%%	Result = {ok, NewState}
+%%	NewState = state()
 %% @doc Update internal state data during a release upgrade&#047;downgrade.
 %% @see //stdlib/gen_server:code_change/3
 %% @private
@@ -293,14 +293,14 @@ code_change(_OldVsn, State, _Extra) ->
 %%----------------------------------------------------------------------
 
 %% @spec (State, Address, Port, Identifier, Packet) -> NewState
-%% 	State = state()
-%% 	Address = //kernel/gen_udp:ip_address()
-%% 	Port = integer()
-%% 	Identifier = integer()
-%% 	Packet = binary()
-%% 	NewState = state()
+%%	State = state()
+%%	Address = //kernel/gen_udp:ip_address()
+%%	Port = integer()
+%%	Identifier = integer()
+%%	Packet = binary()
+%%	NewState = state()
 %% @doc Start a new {@link radius_fsm. radius_fsm} transaction state
-%%% 	handler and forward the request to it.
+%%%	handler and forward the request to it.
 %% @hidden
 start_fsm(#state{socket = Socket, module = Module, fsm_sup = Sup,
 		handlers = Handlers} = State, Address, Port, Identifier, Packet) ->
@@ -317,4 +317,13 @@ start_fsm(#state{socket = Socket, module = Module, fsm_sup = Sup,
 					{address, Address}, {port, Port}, {identifier, Identifier}]),
 			State
 	end.
+
+get_env(Par, Def) ->
+		%% application:get_env/3 introduced in R16
+		case application:get_env(Par, Def) of
+				undefined ->
+						{ok, Def};
+				Val ->
+						{ok, Val}
+		end.
 
