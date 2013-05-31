@@ -1,28 +1,12 @@
 %%% README
 %%%
 
-The radierl project implements a RADIUS protocol stack.
+This is a fork of radierl. Original repo here: https://github.com/vances/radierl
 
-To build the radius application including documentation:
+Changes:
 
-	$ make
+    - Rename repo to radius
+    - Replace original makefiles with rebar support
+    - More incoming
 
-To build the radius_example application:
-
-	$ make example_callbacks
-
-To test the radius and radius_example applications:
-
-	$ make test
-
-To install the radius application:
-
-	$ ERL_TOP=/Users/otpuser/lib/erlang make install
-
-To install the radius_example application:
-
-	$ cd examples
-	$ ERL_TOP=/Users/otpuser/lib/erlang make install
-
-Everything here is distributed under a New BSD style license.
-
+BSD License.
