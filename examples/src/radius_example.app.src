@@ -1,0 +1,19 @@
+%%% radius_example.app
+
+{application, radius_example,
+   [{description, "RADIUS Example"},
+   {id, "radius_example"},
+   {vsn, "1.0.1"},
+   {modules, []},
+   {maxP, infinity},
+   {maxT, infinity},
+   {registered, []},
+   {included_applications, []},
+   {applications, [kernel, stdlib, mnesia, radius]},
+   {env,
+                [{authentication_port, 1812},
+                {accounting_port, 1813},
+                {accounting_dir, "."}]},
+   {mod, {radius_example_app, []}},
+   {start_phases, []}]}.
+
