@@ -1,13 +1,14 @@
 %%% README
 %%%
 
-This is a fork of radierl. Original repo here: https://github.com/vances/radierl
+This is more of a private playground of mine than a fork for the greater good.
+Original repo here: https://github.com/vances/radierl
 
 Changes:
 
     - Rename repo to radius
-    - Replace original makefiles with rebar support
+    - Get rid of original makefiles, make it rebar compatible
     - Allow passing extra env options for udp socket (i.e. sndbuf, recbuf)
-    - More incoming
+    - Add simple decoding of vendor-specific AVPs
 
 BSD License.
