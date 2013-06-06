@@ -10,6 +10,9 @@
 -define(AccessChallenge,    11).
 -define(StatusServer,       12).
 -define(StatusClient,       13).
+-define(DisconnectRequest,  40).
+-define(DisconnectAck,      41).
+-define(DisconnectNack,     42).
 
 %% @type radius(). #radius{
 %%    code = integer(),
