@@ -4,18 +4,18 @@
 %%% @end
 %%%
 %%% Copyright (c) 2011, Motivity Telecom
-%%% 
+%%%
 %%% All rights reserved.
-%%% 
+%%%
 %%% Redistribution and use in source and binary forms, with or without
 %%% modification, are permitted provided that the following conditions
 %%% are met:
-%%% 
+%%%
 %%%    - Redistributions of source code must retain the above copyright
 %%%      notice, this list of conditions and the following disclaimer.
 %%%    - Redistributions in binary form must reproduce the above copyright
 %%%      notice, this list of conditions and the following disclaimer in
-%%%      the documentation and/or other materials provided with the 
+%%%      the documentation and/or other materials provided with the
 %%%      distribution.
 %%%    - Neither the name of Motivity Telecom nor the names of its
 %%%      contributors may be used to endorse or promote products derived
@@ -29,7 +29,7 @@
 %%% SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
 %%% LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 %%% DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-%%% THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+%%% THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 %%% (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 %%% OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %%%
@@ -145,8 +145,8 @@ stop(Pid) ->
 %%
 codec(<<Code, Identifier, Length:16, Authenticator:16/binary,
 		_/binary>> = In) ->
-	Attributes = binary:part(In, 20, Length - 20), 
-	#radius{code = Code, id = Identifier, 
+	Attributes = binary:part(In, 20, Length - 20),
+	#radius{code = Code, id = Identifier,
 			authenticator = binary_to_list(Authenticator),
 			attributes = Attributes};
 codec(#radius{authenticator = Authenticator} = In)
@@ -155,6 +155,10 @@ codec(#radius{authenticator = Authenticator} = In)
 codec(#radius{attributes = Attributes} = In)
 		when is_list(Attributes) ->
 	codec(In#radius{attributes = radius_attributes:codec(Attributes)});
+codec(#radius{code = ?DisconnectRequest, id = Identifier, attributes = Attributes, authenticator = Secret}) ->
+    Length = size(Attributes) + 20,
+    Authenticator = erlang:md5([<<?DisconnectRequest, Identifier, Length:16, 0:128, Attributes/binary>>, Secret]),
+    <<?DisconnectRequest, Identifier, Length:16, Authenticator/binary, Attributes/binary>>;
 codec(#radius{code = Code, id = Identifier,
 		authenticator = Authenticator, attributes = Attributes})
 		when is_integer(Code), is_integer(Identifier),
@@ -162,7 +166,7 @@ codec(#radius{code = Code, id = Identifier,
 	Length = size(Attributes) + 20,
 	<<Code, Identifier, Length:16,
 			Authenticator/binary, Attributes/binary>>.
-	
+
 %%----------------------------------------------------------------------
 %%  The radius private API
 %%----------------------------------------------------------------------
