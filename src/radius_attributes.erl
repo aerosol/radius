@@ -343,7 +343,7 @@ attribute(?PortLimit, Value, Acc) when size(Value) == 4 ->
 attribute(?LoginLatPort, Value, Acc) when size(Value) >= 1 ->
         LoginLatPort = binary_to_list(Value),
         orddict:store(?LoginLatPort, LoginLatPort, Acc);
-attribute(Id, Value, Acc) ->
+attribute(_, _, Acc) ->
         Acc.
 
 %% @hidden
