@@ -47,7 +47,8 @@
 -include_lib("common_test/include/ct.hrl").
 -include_lib("radius/include/radius.hrl").
 
--define(NOKIA, 94).
+-define(VS_NOKIA, 94).
+-define(VS_3GPP, 10415).
 
 %%---------------------------------------------------------------------
 %%  Test server callback functions
@@ -309,11 +310,27 @@ example4(Config) ->
        id = 16#1D,
        attributes = BinAttrs} = radius:codec(Request),
     Attrs = radius_attributes:codec(BinAttrs),
-    {?NOKIA, VSAttrsBin} = radius_attributes:fetch(?VendorSpecific, Attrs),
-    VSAttrs = radius_attributes:codec({vendor, VSAttrsBin}),
-    [{11, <<4>>}, {10, <<1>>}, {15, <<"flexi.internet">>}] = VSAttrs,
+    [{?VS_3GPP, VS3GPP}, {?VS_NOKIA, VSNokia}] = radius_attributes:fetch(?VendorSpecific, Attrs),
+    VSAttrs1 = radius_attributes:codec({vendor, VSNokia}),
+    VSAttrs2 = radius_attributes:codec({vendor, VS3GPP}),
+    [{11, <<4>>}, {10, <<1>>}, {15, <<"flexi.internet">>}] = VSAttrs1,
+    [{10,<<"5">>},
+     {23,<<128,33>>},
+     {22,<<1,98,240,16,1,144,255,31>>},
+     {20,<<"3560590343456622">>},
+     {21,<<1>>},
+     {13,<<"0800">>},
+     {12,<<"1">>},
+     {18,<<"26001">>},
+     {5,<<"05-13921F739697FE74821040000000">>},
+     {2,<<117,0,241,13>>},
+     {8,<<"26001">>},
+     {4,<<10,1,4,206>>},
+     {3,<<0,0,0,0>>},
+     {6,<<212,2,113,34>>},
+     {7,<<92,60,128,77>>},
+     {1,<<"260019900003145">>}] = VSAttrs2,
     ok.
-
 
 %%---------------------------------------------------------------------
 %%  Internal functions

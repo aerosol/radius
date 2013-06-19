@@ -255,7 +255,7 @@ attribute(?Class, Value, Acc) when size(Value) >= 1 ->
 attribute(?VendorSpecific, <<0, VendorId:24, Rest/binary>>, Acc)
   when size(Rest) >= 1 ->
     VendorSpecific = {VendorId, Rest},
-    orddict:store(?VendorSpecific, VendorSpecific, Acc);
+    orddict:append(?VendorSpecific, VendorSpecific, Acc);
 attribute(?SessionTimeout, Value, Acc) when size(Value) == 4 ->
     SessionTimeout = binary:decode_unsigned(Value),
     orddict:store(?SessionTimeout, SessionTimeout, Acc);
@@ -343,7 +343,7 @@ attribute(?PortLimit, Value, Acc) when size(Value) == 4 ->
 attribute(?LoginLatPort, Value, Acc) when size(Value) >= 1 ->
         LoginLatPort = binary_to_list(Value),
         orddict:store(?LoginLatPort, LoginLatPort, Acc);
-attribute(_, _Value, Acc) ->
+attribute(Id, Value, Acc) ->
         Acc.
 
 %% @hidden
